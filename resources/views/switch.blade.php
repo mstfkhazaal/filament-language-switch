@@ -133,6 +133,11 @@
             $gridClasses .= ' ' . $bp[$k][$cols[$k]];
         }
     }
+   $modalClasses = \Illuminate\Support\Arr::toCssClasses([
+        'fls-modal !z-[9999]',
+        $languageSwitch->getModalClass(),
+    ]);
+
 @endphp
 
 
@@ -236,26 +241,71 @@
 @endif
 
 @if ($displayAs === 'modal' || $isUserMenuItem)
-    <x-filament::modal id="fls-modal" class="{{ $languageSwitch->getModalClass() }}" :heading="$languageSwitch->getModalHeading()" :description="$languageSwitch->getModalDescription()" :width="$languageSwitch->getModalWidth() ?? 'md'" :slide-over="$languageSwitch->isModalSlideOver()" :sticky-header="$languageSwitch->isModalSlideOver()" :alignment="$languageSwitch->getModalAlignment()" :close-button="$languageSwitch->hasModalCloseButton() ?? true" :autofocus="$languageSwitch->isModalAutofocused() ?? true" :icon="$languageSwitch->getModalIcon()" :icon-color="$languageSwitch->getModalIconColor()" :close-by-clicking-away="$languageSwitch->isModalClosedByClickingAway() ?? true" :close-by-escaping="$languageSwitch->isModalClosedByEscaping() ?? true">
-            <div class="{{ $gridClasses }}">
+    <x-filament::modal
+        id="fls-modal"
+        class="{{ $modalClasses }}"
+        style="z-index: 9999;"
+        :heading="$languageSwitch->getModalHeading()"
+        :description="$languageSwitch->getModalDescription()"
+        :width="$languageSwitch->getModalWidth() ?? 'md'"
+        :slide-over="$languageSwitch->isModalSlideOver()"
+        :sticky-header="$languageSwitch->isModalSlideOver()"
+        :alignment="$languageSwitch->getModalAlignment()"
+        :close-button="$languageSwitch->hasModalCloseButton() ?? true"
+        :autofocus="$languageSwitch->isModalAutofocused() ?? true"
+        :icon="$languageSwitch->getModalIcon()"
+        :icon-color="$languageSwitch->getModalIconColor()"
+        :close-by-clicking-away="$languageSwitch->isModalClosedByClickingAway() ?? true"
+        :close-by-escaping="$languageSwitch->isModalClosedByEscaping() ?? true"
+    >
+        <div class="{{ $gridClasses }}">
             @if (count($suggestedLocales) > 0)
-                <div class="col-span-full px-2 py-1 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">{{ __('language-switch::translations.suggested') }}</div>
+                <div class="col-span-full px-2 py-1 text-xs font-semibold tracking-wider text-gray-500 uppercase dark:text-gray-400">
+                    {{ __('language-switch::translations.suggested') }}
+                </div>
+
                 @foreach ($suggestedLocales as $locale)
-                    @include('language-switch::list-item', ['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => $languageSwitch->getItemStyle()])
+                    @include('language-switch::list-item', [
+                        'locale' => $locale,
+                        'hideLanguageCode' => $hideLanguageCodeInside,
+                        'codeClasses' => $listCodeClasses,
+                        'itemStyle' => $languageSwitch->getItemStyle(),
+                    ])
                 @endforeach
-                @if (count($allLocales) > 0) <div class="col-span-full my-1 border-t border-gray-200 dark:border-gray-700"></div> @endif
+
+                @if (count($allLocales) > 0)
+                    <div class="col-span-full my-1 border-t border-gray-200 dark:border-gray-700"></div>
+                @endif
             @endif
+
             @foreach ($allLocales as $locale)
-                @include('language-switch::list-item', ['locale' => $locale, 'hideLanguageCode' => $hideLanguageCodeInside, 'codeClasses' => $listCodeClasses, 'itemStyle' => $languageSwitch->getItemStyle()])
+                @include('language-switch::list-item', [
+                    'locale' => $locale,
+                    'hideLanguageCode' => $hideLanguageCodeInside,
+                    'codeClasses' => $listCodeClasses,
+                    'itemStyle' => $languageSwitch->getItemStyle(),
+                ])
             @endforeach
         </div>
     </x-filament::modal>
+
     @if ($isUserMenuItem)
         <script>
             document.addEventListener('alpine:init', () => {
-                document.body.addEventListener('click', (e) => {
-                    let link = e.target.closest('a[href$="#fls-modal"]');
-                    if (link) { e.preventDefault(); window.dispatchEvent(new CustomEvent('open-modal', { detail: { id: 'fls-modal' } })); }
+                document.body.addEventListener('click', (event) => {
+                    const link = event.target.closest('a[href$="#fls-modal"]');
+
+                    if (! link) {
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    window.dispatchEvent(new CustomEvent('open-modal', {
+                        detail: {
+                            id: 'fls-modal',
+                        },
+                    }));
                 });
             });
         </script>
