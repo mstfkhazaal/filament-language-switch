@@ -722,7 +722,7 @@ class LanguageSwitch extends Component
             }
         }
 
-return $flagUrls;
+        return $flagUrls;
     }
 
     public function isFlagsOnly(): bool
@@ -913,7 +913,7 @@ return $flagUrls;
             return strval($labels[$locale]);
         }
 
-return str(locale_get_display_name(locale: $locale, displayLocale: $this->getNativeLabel() ? $locale : $this->getDisplayLocale()))->title()->toString();
+        return str(locale_get_display_name(locale: $locale, displayLocale: $this->getNativeLabel() ? $locale : $this->getDisplayLocale()))->title()->toString();
     }
 
     public function isCurrentPanelIncluded(): bool
