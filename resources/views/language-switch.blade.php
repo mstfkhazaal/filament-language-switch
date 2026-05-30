@@ -27,7 +27,7 @@
 <div>
     @if ($isVisibleOutsidePanels)
         <div @class([
-            'fls-display-on fixed w-fit flex p-4 z-100',
+            'fls-display-on fixed w-fit flex p-4 z-40',
             'top-0' => str_contains($outsidePanelsPlacement, 'top'),
             'bottom-0' => str_contains($outsidePanelsPlacement, 'bottom'),
             'justify-start' => str_contains($outsidePanelsPlacement, 'left'),
