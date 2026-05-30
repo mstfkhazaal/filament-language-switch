@@ -26,7 +26,7 @@
     @if ($isVisibleOutsidePanels)
         <div
             @class([
-                'fls-display-on w-full flex p-4 z-[9998] pointer-events-none',
+                'fls-display-on w-full flex p-4 z-40 pointer-events-none',
                 'fixed' => $isFixedOutsidePanels,
                 'absolute' => ! $isFixedOutsidePanels,
                 'top-0' => str_contains($outsidePanelsPlacement, 'top'),
